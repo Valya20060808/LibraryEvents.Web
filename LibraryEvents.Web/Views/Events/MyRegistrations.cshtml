@@ -1,0 +1,217 @@
+﻿@model IEnumerable<LibraryEvents.Web.Models.Registration>
+
+@{
+    ViewData["Title"] = "Мои записи";
+}
+
+<style>
+    .registrations-header {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        border-radius: 0 0 30px 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .registrations-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+    .registrations-title {
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: white;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .registration-card {
+        background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        margin-bottom: 1.5rem;
+    }
+
+        .registration-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+    .card-header {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        padding: 1.2rem 1.5rem;
+        border-top-left-radius: 16px !important;
+        border-top-right-radius: 16px !important;
+    }
+
+    .event-title {
+        font-weight: 700;
+        font-size: 1.3rem;
+        margin: 0;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .registration-meta {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+    }
+
+        .registration-meta i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+            color: #6c757d;
+            width: 25px;
+            text-align: center;
+        }
+
+    .no-registrations {
+        background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+        border-radius: 16px;
+        padding: 3rem;
+        text-align: center;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    .no-registrations-icon {
+        font-size: 4rem;
+        color: #adb5bd;
+        margin-bottom: 1.5rem;
+        opacity: 0.7;
+    }
+
+    .btn-details {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        border: none;
+        border-radius: 50px;
+        padding: 0.6rem 1.5rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-details:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            color: white;
+        }
+
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    .registrations-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+</style>
+
+<div class="registrations-header text-center">
+    <div class="container">
+        <h1 class="registrations-title animate-on-scroll">@ViewData["Title"]</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="registrations-container">
+        @if (!Model.Any())
+        {
+            <div class="no-registrations animate-on-scroll">
+                <div class="no-registrations-icon">
+                    <i class="bi bi-calendar-x"></i>
+                </div>
+                <h3 class="mb-3">У вас пока нет записей</h3>
+                <p class="text-muted mb-4">Посетите афишу событий и запишитесь на интересные мероприятия</p>
+                <a asp-action="Index" asp-controller="Events" class="btn btn-details">
+                    <i class="bi bi-calendar-event me-2"></i>Посмотреть афишу
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="animate-on-scroll">
+                @foreach (var reg in Model)
+                {
+                    <div class="registration-card">
+                        <div class="card-header">
+                            <h3 class="event-title">@reg.Event.Title</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="registration-meta">
+                                <i class="bi bi-calendar-check"></i>
+                                <div>
+                                    <strong>Дата регистрации:</strong>
+                                    @reg.RegisteredAt.ToString("dd MMMM yyyy 'в' HH:mm")
+                                </div>
+                            </div>
+
+                            <div class="registration-meta">
+                                <i class="bi bi-calendar-event"></i>
+                                <div>
+                                    <strong>Дата события:</strong>
+                                    @reg.Event.Date.ToString("dd MMMM yyyy")
+                                </div>
+                            </div>
+
+                            <div class="registration-meta">
+                                <i class="bi bi-clock"></i>
+                                <div>
+                                    <strong>Время:</strong>
+                                    @reg.Event.Time.ToString(@"hh\:mm")
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end mt-3">
+                                <a asp-action="Details" asp-route-id="@reg.EventId" class="btn btn-details">
+                                    <i class="bi bi-info-circle me-2"></i>Подробнее о событии
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    // Анимация появления элементов при скролле
+    document.addEventListener('DOMContentLoaded', function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>

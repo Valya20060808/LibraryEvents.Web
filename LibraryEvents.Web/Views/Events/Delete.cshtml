@@ -1,0 +1,223 @@
+﻿@model LibraryEvents.Web.Models.Event
+
+@{
+    ViewData["Title"] = "Удалить событие";
+}
+
+<style>
+    .delete-header {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        border-radius: 0 0 30px 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .delete-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+    .delete-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: white;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .confirmation-card {
+        background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .event-icon {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 4rem;
+        opacity: 0.1;
+        color: #dc3545;
+        z-index: 0;
+    }
+
+    .event-details {
+        position: relative;
+        z-index: 1;
+    }
+
+    .event-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #343a40;
+        margin-bottom: 1.5rem;
+    }
+
+    .event-meta {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+
+        .event-meta i {
+            margin-right: 15px;
+            font-size: 1.3rem;
+            color: #6c757d;
+            width: 25px;
+            text-align: center;
+        }
+
+    .warning-section {
+        background-color: #fff5f5;
+        border-left: 4px solid #dc3545;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .warning-icon {
+        font-size: 2rem;
+        color: #dc3545;
+        margin-right: 15px;
+    }
+
+    .warning-text {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #dc3545;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+        border: none;
+        border-radius: 50px;
+        padding: 0.8rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+    .btn-secondary {
+        background: #6c757d;
+        border: none;
+        border-radius: 50px;
+        padding: 0.8rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 2rem;
+    }
+
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+</style>
+
+<div class="delete-header text-center">
+    <div class="container">
+        <h1 class="delete-title animate-on-scroll">@ViewData["Title"]</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="confirmation-card animate-on-scroll">
+        <i class="bi bi-exclamation-triangle event-icon"></i>
+
+        <div class="event-details">
+            <h3 class="event-title">@Model.Title</h3>
+
+            <div class="event-meta">
+                <i class="bi bi-calendar"></i>
+                <span><strong>Дата:</strong> @Model.Date.ToString("dd MMMM yyyy")</span>
+            </div>
+
+            <div class="event-meta">
+                <i class="bi bi-clock"></i>
+                <span><strong>Время:</strong> @Model.Time.ToString(@"hh\:mm")</span>
+            </div>
+
+            <div class="event-meta">
+                <i class="bi bi-book"></i>
+                <span><strong>Жанр:</strong> @Model.Genre?.Name</span>
+            </div>
+
+            <div class="event-meta">
+                <i class="bi bi-person"></i>
+                <span><strong>Спикер:</strong> @Model.Speaker?.Name</span>
+            </div>
+
+            <div class="event-meta">
+                <i class="bi bi-geo-alt"></i>
+                <span><strong>Место:</strong> @Model.Location</span>
+            </div>
+
+            <div class="warning-section d-flex align-items-center">
+                <i class="bi bi-exclamation-octagon warning-icon"></i>
+                <p class="warning-text mb-0">Вы уверены, что хотите удалить это событие? Это действие нельзя отменить.</p>
+            </div>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <div class="action-buttons">
+                    <a asp-action="Index" class="btn btn-secondary flex-grow-1">
+                        <i class="bi bi-arrow-left me-2"></i>Отменить
+                    </a>
+                    <button type="submit" class="btn btn-danger flex-grow-1">
+                        <i class="bi bi-trash me-2"></i>Удалить навсегда
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Анимация появления элементов при скролле
+    document.addEventListener('DOMContentLoaded', function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>

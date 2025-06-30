@@ -1,0 +1,395 @@
+﻿@model IEnumerable<Registration>
+@{
+    ViewData["Title"] = "Мои регистрации";
+}
+
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        --card-gradient: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+        --shadow: 0 8px 30px rgba(0,0,0,0.12);
+        --shadow-hover: 0 12px 40px rgba(0,0,0,0.15);
+    }
+
+    .registrations-section {
+        min-height: calc(100vh - 120px);
+        padding: 3rem 0;
+        background-color: #f8fafc;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" stroke="%23e2e8f0" stroke-width="0.5" x="0" y="0" width="100" height="100"/></svg>');
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+        padding: 1rem 0;
+        border-bottom: 2px solid rgba(106, 17, 203, 0.1);
+    }
+
+    .page-title {
+        position: relative;
+        padding-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+        .page-title::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+
+    .btn-find-events {
+        background: transparent;
+        border: 2px solid #6a11cb;
+        color: #6a11cb;
+        padding: 0.7rem 1.8rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-find-events:hover {
+            background: rgba(106, 17, 203, 0.05);
+        }
+
+    .empty-state {
+        background: var(--card-gradient);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 4rem 2rem;
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .empty-icon {
+        font-size: 5rem;
+        color: #e2e8f0;
+        margin-bottom: 1.5rem;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @@keyframes float {
+        0% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-15px);
+        }
+
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    .btn-view-events {
+        background: var(--primary-gradient);
+        border: none;
+        color: white;
+        padding: 0.8rem 2.2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: inline-flex;
+        align-items: center;
+        box-shadow: var(--shadow);
+    }
+
+        .btn-view-events:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-view-events::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20px;
+            height: 200%;
+            background: rgba(255,255,255,0.3);
+            transform: rotate(25deg);
+            transition: all 0.7s;
+        }
+
+        .btn-view-events:hover::after {
+            left: 120%;
+        }
+
+    .registration-card {
+        background: var(--card-gradient);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        height: 100%;
+        border: none;
+    }
+
+        .registration-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+    .card-header-custom {
+        background: rgba(106, 17, 203, 0.03);
+        padding: 1.2rem 1.5rem;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .genre-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    .registration-date {
+        color: #64748b;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .card-body-custom {
+        padding: 1.8rem;
+    }
+
+    .event-title {
+        font-weight: 700;
+        margin-bottom: 1.2rem;
+        font-size: 1.3rem;
+        color: #1e293b;
+    }
+
+    .detail-list {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .detail-item {
+        display: flex;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px dashed #e2e8f0;
+    }
+
+        .detail-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+    .detail-icon {
+        font-size: 1.2rem;
+        color: #6a11cb;
+        min-width: 30px;
+        margin-right: 10px;
+    }
+
+    .notes-card {
+        background: #f1f5fe;
+        border-radius: 12px;
+        padding: 1.2rem;
+        border-left: 3px solid #6a11cb;
+        margin-top: 1rem;
+    }
+
+    .card-footer-custom {
+        background: transparent;
+        padding: 1.5rem;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn-details {
+        background: transparent;
+        border: 2px solid #6a11cb;
+        color: #6a11cb;
+        padding: 0.6rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-details:hover {
+            background: rgba(106, 17, 203, 0.05);
+        }
+
+    .btn-cancel {
+        background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+        border: none;
+        color: white;
+        padding: 0.6rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        box-shadow: 0 5px 15px rgba(255, 75, 43, 0.2);
+    }
+
+        .btn-cancel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(255, 75, 43, 0.3);
+        }
+
+    .animate-card {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+        .animate-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    .delay-1 {
+        transition-delay: 0.1s;
+    }
+
+    .delay-2 {
+        transition-delay: 0.2s;
+    }
+
+    .delay-3 {
+        transition-delay: 0.3s;
+    }
+</style>
+
+<div class="registrations-section">
+    <div class="container">
+        <div class="page-header">
+            <h2 class="page-title">@ViewData["Title"]</h2>
+            <a asp-controller="Events" asp-action="Index" class="btn btn-find-events">
+                <i class="bi bi-calendar-plus me-2"></i> Найти мероприятия
+            </a>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state animate-card">
+                <div class="empty-icon">
+                    <i class="bi bi-calendar-x"></i>
+                </div>
+                <h3>У вас пока нет регистраций</h3>
+                <p class="text-muted lead">Найдите интересные мероприятия и зарегистрируйтесь!</p>
+                <a asp-controller="Events" asp-action="Index" class="btn btn-view-events mt-3">
+                    <i class="bi bi-calendar-event me-2"></i> Посмотреть афишу
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+                @foreach (var reg in Model)
+                {
+                    <div class="col-lg-6">
+                        <div class="registration-card animate-card">
+                            <div class="card-header-custom d-flex justify-content-between align-items-center">
+                                <span class="genre-badge" style="background: @reg.Event.Genre?.Color; color: white;">
+                                    @reg.Event.Genre?.Name
+                                </span>
+                                <span class="registration-date">
+                                    <i class="bi bi-calendar-check me-1"></i>@reg.RegisteredAt.ToString("d MMM")
+                                </span>
+                            </div>
+
+                            <div class="card-body-custom">
+                                <h5 class="event-title">@reg.Event.Title</h5>
+
+                                <div class="detail-list">
+                                    <div class="detail-item">
+                                        <div class="detail-icon">
+                                            <i class="bi bi-calendar"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Дата:</strong> @reg.Event.Date.ToString("d MMMM yyyy")
+                                            <br>
+                                            <strong>Время:</strong> @reg.Event.Time.ToString(@"hh\:mm")
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-item">
+                                        <div class="detail-icon">
+                                            <i class="bi bi-geo-alt"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Место:</strong> @reg.Event.Location
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-item">
+                                        <div class="detail-icon">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Спикер:</strong> @(reg.Event.Speaker?.Name ?? "не указан")
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if (!string.IsNullOrEmpty(reg.AdditionalNotes))
+                                {
+                                    <div class="notes-card">
+                                        <div class="detail-icon">
+                                            <i class="bi bi-pencil"></i>
+                                        </div>
+                                        <p class="mb-0 mt-2">@reg.AdditionalNotes</p>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="card-footer-custom">
+                                <a asp-controller="Events" asp-action="Details"
+                                   asp-route-id="@reg.EventId" class="btn btn-details">
+                                    <i class="bi bi-info-circle me-2"></i> Подробнее
+                                </a>
+                                <form asp-action="Cancel" method="post">
+                                    <input type="hidden" name="id" value="@reg.Id" />
+                                    <button type="submit" class="btn btn-cancel">
+                                        <i class="bi bi-x-circle me-2"></i> Отменить
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    // Анимация появления элементов при скролле
+    document.addEventListener('DOMContentLoaded', function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-card').forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>

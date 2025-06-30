@@ -1,0 +1,399 @@
+﻿@model IEnumerable<LibraryEvents.Web.Models.Event>
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Афиша событий";
+    var isAdmin = User.IsInRole("Admin");
+
+    string GetGenreImage(int? genreId)
+    {
+        return genreId switch
+        {
+            1 => "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80", 
+            2 => "https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=800&q=80", 
+            3 => "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=800&q=80", 
+            4 => "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=800&q=80", 
+            5 => "https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=800&q=80", 
+            6 => "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=800&q=80", 
+            7 => "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=800&q=80", 
+            8 => "https://images.unsplash.com/photo-1579283483468-7a3788490d1a?auto=format&fit=crop&w=800&q=80", 
+            _ => "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=800&q=80" 
+        };
+    }
+}
+
+<style>
+    .events-header {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        border-radius: 0 0 30px 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .events-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+    .events-title {
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: white;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .filter-container {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        margin-bottom: 2rem;
+    }
+
+    .event-card {
+        background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .event-card .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            transition: transform 0.5s ease;
+        }
+
+        .event-card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+
+    .card-body {
+        padding: 1.8rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .event-date {
+        color: white;
+        padding: 0.6rem 1rem;
+        text-align: center;
+        font-weight: 700;
+        border-radius: 10px;
+        display: inline-block;
+        margin-bottom: 1.2rem;
+        width: fit-content;
+        background: var(--genre-color); 
+    }
+
+    .event-title {
+        font-weight: 700;
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+        color: #343a40;
+    }
+
+    .event-meta {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.6rem;
+        font-size: 0.95rem;
+    }
+
+        .event-meta i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+            color: var(--genre-color); 
+        }
+
+    .event-description {
+        color: #495057;
+        flex-grow: 1;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+
+    .btn-custom {
+        border: 1px solid var(--genre-color);
+        color: var(--genre-color);
+        background-color: transparent;
+        border-radius: 50px;
+        font-weight: 600;
+        padding: 0.5rem 1.2rem;
+        transition: all 0.3s ease;
+        text-align: center;
+        display: block;
+        width: 100%;
+    }
+
+        .btn-custom:hover {
+            background-color: var(--genre-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    .no-events {
+        background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+        border-radius: 16px;
+        padding: 3rem;
+        text-align: center;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    .no-events-icon {
+        font-size: 4rem;
+        color: #adb5bd;
+        margin-bottom: 1.5rem;
+        opacity: 0.7;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .btn-admin {
+        flex: 1;
+        text-align: center;
+        padding: 0.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+        .btn-admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+    .btn-edit {
+        background: #ffc107;
+        color: #212529;
+        border: none;
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+        border: none;
+    }
+
+    .card-footer {
+        padding: 1rem 1.8rem;
+        background: rgba(0,0,0,0.03);
+        border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .event-meta i.bi-book {
+        color: var(--genre-color) !important;
+    }
+
+    .event-meta i.bi-person {
+        color: var(--genre-color) !important;
+    }
+
+    .event-meta i.bi-geo-alt {
+        color: var(--genre-color) !important;
+    }
+
+    .genre-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+        z-index: 1;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+    }
+
+    .genre-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.9);
+        color: #343a40;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .img-container {
+        position: relative;
+        overflow: hidden;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+    }
+</style>
+
+<div class="events-header text-center">
+    <div class="container">
+        <h1 class="events-title animate-on-scroll">Афиша событий</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="filter-container animate-on-scroll">
+        <form method="get" asp-action="Index">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label text-muted small mb-1">Поиск по названию</label>
+                    <input type="text" name="searchString" value="@(ViewData["CurrentFilter"] as string)"
+                           class="form-control form-control-lg" placeholder="Введите название события...">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted small mb-1">Фильтр по жанру</label>
+                    <select name="genreId" class="form-select form-select-lg" asp-items="@(ViewData["Genres"] as SelectList)">
+                        <option value="0">Все жанры</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+                        <i class="bi bi-funnel me-2"></i>Применить
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    @if (isAdmin)
+    {
+        <div class="d-flex justify-content-end mb-4 animate-on-scroll">
+            <a asp-action="Create" class="btn btn-primary btn-action" style="width: auto; display: inline-flex; align-items: center;">
+                <i class="bi bi-plus-circle me-2"></i>Создать событие
+            </a>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="no-events animate-on-scroll">
+            <div class="no-events-icon">
+                <i class="bi bi-calendar-x"></i>
+            </div>
+            <h3 class="mb-3">Событий не найдено</h3>
+            <p class="text-muted mb-4">Попробуйте изменить параметры фильтра или загляните позже</p>
+            <a href="@Url.Action("Index")" class="btn btn-outline-primary">Сбросить фильтры</a>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var item in Model)
+            {
+                var genreColor = item.Genre?.Color ?? "#6a11cb";
+                var genreImage = GetGenreImage(item.Genre?.Id);
+
+                <div class="col animate-on-scroll">
+                    <div class="event-card" style="--genre-color: @genreColor">
+                        <div class="img-container">
+                            <img src="@genreImage" alt="@item.Genre?.Name: @item.Title" class="card-img-top">
+                            <div class="genre-overlay"></div>
+                            <span class="genre-badge">@item.Genre?.Name</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="event-date">
+                                @item.Date.ToString("dd MMM")<br>
+                                <small>@item.Time.ToString(@"hh\:mm")</small>
+                            </div>
+                            <h5 class="event-title">@item.Title</h5>
+
+                            <div class="event-meta">
+                                <i class="bi bi-person"></i>
+                                <span>@item.Speaker?.Name</span>
+                            </div>
+
+                            <div class="event-meta">
+                                <i class="bi bi-geo-alt"></i>
+                                <span>@item.Location</span>
+                            </div>
+
+                            <p class="event-description">@item.Description</p>
+                        </div>
+
+                        <div class="card-footer">
+                            <a asp-action="Details" asp-route-id="@item.Id"
+                               class="btn btn-custom mb-2">
+                                <i class="bi bi-info-circle me-2"></i>Подробнее
+                            </a>
+
+                            @if (isAdmin)
+                            {
+                                <div class="action-buttons">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="btn-admin btn-edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       class="btn-admin btn-delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<script>
+ 
+    document.addEventListener('DOMContentLoaded', function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>

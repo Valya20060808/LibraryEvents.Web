@@ -1,0 +1,245 @@
+﻿@{
+    ViewData["Title"] = "Справка и поддержка";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5 animate-on-scroll">
+                <h1 class="display-4 fw-bold text-gradient mb-3">Справка и поддержка</h1>
+                <p class="lead text-muted">Найдите ответы на частые вопросы или свяжитесь с нашей службой поддержки</p>
+            </div>
+
+            <!-- Контактная информация -->
+            <div class="card border-0 shadow-lg mb-5 animate-on-scroll">
+                <div class="card-header bg-transparent border-0 py-4">
+                    <h2 class="h3 mb-0 text-center"><i class="bi bi-headset me-2"></i>Контактная информация</h2>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <!-- Телефон -->
+                        <div class="col-md-6">
+                            <div class="contact-card bg-light p-4 rounded-3 h-100">
+                                <div class="icon-circle bg-primary mb-3">
+                                    <i class="bi bi-telephone text-white fs-4"></i>
+                                </div>
+                                <h3 class="h5">Телефон</h3>
+                                <p class="mb-1">Звоните нам в рабочее время (9:00-18:00)</p>
+                                <a href="tel:+79227548310" class="btn btn-link p-0 text-decoration-none fs-5 fw-bold">
+                                    +7 (922) 754-83-10
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <div class="contact-card bg-light p-4 rounded-3 h-100">
+                                <div class="icon-circle bg-danger mb-3">
+                                    <i class="bi bi-envelope text-white fs-4"></i>
+                                </div>
+                                <h3 class="h5">Электронная почта</h3>
+                                <p class="mb-1">Пишите нам в любое время</p>
+                                <a href="mailto:sam3132288@gmail.com" class="btn btn-link p-0 text-decoration-none fs-5 fw-bold">
+                                    sam3132288@gmail.com
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Telegram -->
+                        <div class="col-md-6">
+                            <div class="contact-card bg-light p-4 rounded-3 h-100">
+                                <div class="icon-circle bg-info mb-3">
+                                    <i class="bi bi-telegram text-white fs-4"></i>
+                                </div>
+                                <h3 class="h5">Telegram</h3>
+                                <p class="mb-1">Быстрая связь через мессенджер</p>
+                                <a href="https://t.me/dizayafam" target="_blank" class="btn btn-link p-0 text-decoration-none fs-5 fw-bold">
+                                    dizayafam
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- VK -->
+                        <div class="col-md-6">
+                            <div class="contact-card bg-light p-4 rounded-3 h-100">
+                                <div class="icon-circle bg-primary mb-3">
+                                    <i class="bi bi-people text-white fs-4"></i>
+                                </div>
+                                <h3 class="h5">ВКонтакте</h3>
+                                <p class="mb-1">Наша страница в соцсети</p>
+                                <a href="https://vk.com/teterich" target="_blank" class="btn btn-link p-0 text-decoration-none fs-5 fw-bold">
+                                    vk.com/teterich
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div class="card border-0 shadow-lg mb-5 animate-on-scroll">
+                <div class="card-header bg-transparent border-0 py-4">
+                    <h2 class="h3 mb-0 text-center"><i class="bi bi-question-circle me-2"></i>Часто задаваемые вопросы</h2>
+                </div>
+                <div class="card-body p-4">
+                    <div class="accordion" id="faqAccordion">
+                        <!-- Вопрос 1 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                    Как зарегистрироваться на мероприятие?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <ol class="mb-0">
+                                        <li>Перейдите на страницу интересующего вас мероприятия</li>
+                                        <li>Согласитесь с правилами участия в мероприятии</li>
+                                        <li>Нажмите кнопку "Подтвердить регистрацию"</li>
+                                        
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Вопрос 2 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                    Можно ли отменить регистрацию?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <p>Да, вы можете отменить регистрацию:</p>
+                                    <ul>
+                                        <li>Через личный кабинет в разделе "Мои регистрации"</li>
+                                        <li>По телефону поддержки: +7 (922) 754-83-40</li>
+                                        <li>По электронной почте: sam313288@gmail.com</li>
+                                    </ul>
+                                    <p class="mb-0">Отмена возможна не позднее чем за 24 часа до начала мероприятия.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Вопрос 4 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                                    Как предложить тему для нового мероприятия?
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <p>Мы всегда рады новым предложениям! Вы можете:</p>
+                                    <ol class="mb-0">
+                                        <li>Отправить вашу идею на почту: sam313288@gmail.com</li>
+                                        <li>Написать в Telegram: dizayafam</li>
+                                        <li>Оставить предложение в нашей группе ВКонтакте</li>
+                                        <li>Лично обсудить с организаторами на любом мероприятии</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-gradient {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .contact-card {
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .icon-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .accordion-button:not(.collapsed) {
+        background-color: rgba(106, 17, 203, 0.05);
+        color: #6a11cb;
+        box-shadow: none;
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: rgba(106, 17, 203, 0.25);
+    }
+
+    .accordion-item {
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 8px !important;
+        margin-bottom: 12px;
+        overflow: hidden;
+    }
+
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    .card {
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .form-control, .accordion-button {
+        border-radius: 12px !important;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Анимация появления элементов
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Обработка формы обратной связи
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    // В реальном приложении здесь был бы AJAX-запрос
+                    alert('Ваш вопрос отправлен! Мы ответим вам в ближайшее время.');
+                    form.reset();
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,236 @@
+﻿@model LibraryEvents.Web.Models.Event
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Создать событие";
+}
+
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        --card-gradient: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+        --shadow: 0 8px 30px rgba(0,0,0,0.12);
+        --shadow-hover: 0 12px 40px rgba(0,0,0,0.15);
+    }
+
+    .create-header {
+        background: var(--primary-gradient);
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        border-radius: 0 0 30px 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .create-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+    .create-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: white;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .form-container {
+        background: var(--card-gradient);
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+        .form-container:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-5px);
+        }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid #ced4da;
+        border-radius: 12px;
+        padding: 0.8rem 1.2rem;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 0.25rem rgba(106, 17, 203, 0.15);
+        }
+
+    .btn-primary {
+        background: var(--primary-gradient);
+        border: none;
+        border-radius: 50px;
+        padding: 0.8rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: var(--shadow);
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+    .btn-secondary {
+        border-radius: 50px;
+        padding: 0.8rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+    }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: #f1f5f9;
+        }
+
+    .text-danger {
+        font-weight: 500;
+        margin-top: 0.4rem;
+        display: block;
+        color: #ff4b2b;
+    }
+
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    .form-icon {
+        position: absolute;
+        top: -20px;
+        right: 20px;
+        font-size: 5rem;
+        opacity: 0.05;
+        color: #6a11cb;
+        z-index: 0;
+    }
+</style>
+
+<div class="create-header text-center">
+    <div class="container">
+        <h1 class="create-title animate-on-scroll">Создать событие</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="form-container animate-on-scroll">
+        <i class="bi bi-plus-circle form-icon"></i>
+
+        <form asp-action="Create" method="post" id="eventForm">
+            @Html.AntiForgeryToken()
+
+            <!-- Убрали блок общего списка ошибок -->
+
+            <div class="mb-4">
+                <label asp-for="Title" class="form-label">Название события</label>
+                <input asp-for="Title" class="form-control" placeholder="Введите название события" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Description" class="form-label">Описание</label>
+                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Опишите содержание события"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label asp-for="Date" class="form-label">Дата проведения</label>
+                    <input asp-for="Date" type="date" class="form-control" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <label asp-for="Time" class="form-label">Время начала</label>
+                    <input asp-for="Time" type="time" class="form-control" />
+                    <span asp-validation-for="Time" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Location" class="form-label">Место проведения</label>
+                <input asp-for="Location" class="form-control" placeholder="Укажите место проведения" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label asp-for="GenreId" class="form-label">Жанр</label>
+                    <select asp-for="GenreId" class="form-select" asp-items="@(ViewData["Genres"] as SelectList)">
+                        <option value="">-- выберите жанр --</option>
+                    </select>
+                    <span asp-validation-for="GenreId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <label asp-for="SpeakerId" class="form-label">Спикер</label>
+                    <select asp-for="SpeakerId" class="form-select" asp-items="@(ViewData["Speakers"] as SelectList)">
+                        <option value="">-- выберите спикера --</option>
+                    </select>
+                    <span asp-validation-for="SpeakerId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end pt-2">
+                <a asp-action="Index" class="btn btn-secondary me-3">Отмена</a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>Создать событие
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Анимация появления элементов при скролле
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Установка минимальной даты на сегодня
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('Date').setAttribute('min', today);
+        });
+    </script>
+}

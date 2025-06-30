@@ -1,0 +1,430 @@
+﻿@model LibraryEvents.Web.Models.Event
+@{
+    ViewData["Title"] = Model.Title;
+    bool isRegistered = ViewBag.IsRegistered ?? false;
+}
+
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        --card-gradient: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+        --shadow: 0 8px 30px rgba(0,0,0,0.12);
+        --shadow-hover: 0 12px 40px rgba(0,0,0,0.15);
+        --success-gradient: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+    }
+
+    .event-details-section {
+        padding-top: 1rem;
+        background-color: #f8fafc;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" stroke="%23e2e8f0" stroke-width="0.5" x="0" y="0" width="100" height="100"/></svg>');
+        min-height: 100vh;
+    }
+
+    .details-header {
+        background: var(--primary-gradient);
+        padding: 4rem 0;
+        margin-bottom: 3rem;
+        border-radius: 0 0 30px 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .details-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+    .details-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: white;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        margin-bottom: 0.5rem;
+    }
+
+    .details-subtitle {
+        color: rgba(255,255,255,0.85);
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .event-details-card {
+        background: var(--card-gradient);
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+        .event-details-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-5px);
+        }
+
+    .event-icon {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 5rem;
+        opacity: 0.07;
+        color: #6a11cb;
+        z-index: 0;
+    }
+
+    .event-info {
+        position: relative;
+        z-index: 1;
+    }
+
+    .event-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid rgba(106, 17, 203, 0.1);
+    }
+
+    .event-meta {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1.8rem;
+        font-size: 1.1rem;
+    }
+
+        .event-meta .icon-container {
+            width: 45px;
+            height: 45px;
+            background: rgba(106, 17, 203, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .event-meta i {
+            font-size: 1.4rem;
+            color: #6a11cb;
+        }
+
+    .event-description {
+        background-color: #f8fafc;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-top: 2.5rem;
+        font-size: 1.1rem;
+        line-height: 1.7;
+        border-left: 4px solid #6a11cb;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 2.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-back {
+        background: transparent;
+        border: 2px solid #6a11cb;
+        color: #6a11cb;
+        padding: 0.8rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-back:hover {
+            background: rgba(106, 17, 203, 0.05);
+        }
+
+    .btn-register {
+        background: var(--success-gradient);
+        border: none;
+        color: white;
+        padding: 0.8rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+        /* Добавлен отступ сверху */
+        margin-top: 2rem;
+    }
+
+        .btn-register:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-register::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20px;
+            height: 200%;
+            background: rgba(255,255,255,0.3);
+            transform: rotate(25deg);
+            transition: all 0.7s;
+        }
+
+        .btn-register:hover::after {
+            left: 120%;
+        }
+
+    .no-value {
+        color: #64748b;
+        font-style: italic;
+    }
+
+    .registration-status {
+        margin-top: 2.5rem;
+        padding: 1.8rem;
+        border-radius: 16px;
+        background: rgba(0, 176, 155, 0.08);
+        border: 1px solid rgba(0, 176, 155, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .alert-info {
+        background: rgba(37, 117, 252, 0.08);
+        border: 1px solid rgba(37, 117, 252, 0.2);
+        color: #2575fc;
+        border-radius: 16px;
+        padding: 1.8rem;
+        margin-top: 2.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    .delay-1 {
+        transition-delay: 0.1s;
+    }
+
+    .delay-2 {
+        transition-delay: 0.2s;
+    }
+
+    .delay-3 {
+        transition-delay: 0.3s;
+    }
+
+    /* Новый класс для группировки кнопок */
+    .registration-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    @@media (max-width: 768px) {
+        .details-title {
+            font-size: 2rem;
+        }
+
+        .event-details-card {
+            padding: 1.8rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-back, .btn-register {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .registration-status {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="event-details-section">
+    <div class="details-header text-center">
+        <div class="container">
+            <h1 class="details-title animate-on-scroll">@Model.Title</h1>
+            <p class="details-subtitle animate-on-scroll">Детальная информация о мероприятии</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="event-details-card animate-on-scroll">
+            <i class="bi bi-calendar-event event-icon"></i>
+
+            <div class="event-info">
+                <h2 class="event-title">Информация о событии</h2>
+
+                <div class="event-meta animate-on-scroll delay-1">
+                    <div class="icon-container">
+                        <i class="bi bi-calendar"></i>
+                    </div>
+                    <div>
+                        <strong>Дата:</strong> @Model.Date.ToString("dd MMMM yyyy")<br>
+                        <strong>Время:</strong> @Model.Time.ToString(@"hh\:mm")
+                    </div>
+                </div>
+
+                <div class="event-meta animate-on-scroll delay-1">
+                    <div class="icon-container">
+                        <i class="bi bi-geo-alt"></i>
+                    </div>
+                    <div>
+                        <strong>Место:</strong> @Model.Location
+                    </div>
+                </div>
+
+                <div class="event-meta animate-on-scroll delay-1">
+                    <div class="icon-container">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <div>
+                        <strong>Жанр:</strong>
+                        @if (Model.Genre != null)
+                        {
+                            @Model.Genre.Name
+                        }
+                        else
+                        {
+                            <span class="no-value">не указан</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="event-meta animate-on-scroll delay-1">
+                    <div class="icon-container">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <div>
+                        <strong>Спикер:</strong>
+                        @if (Model.Speaker != null)
+                        {
+                            @Model.Speaker.Name
+                        }
+                        else
+                        {
+                            <span class="no-value">не указан</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="event-description animate-on-scroll delay-2">
+                    <h5 class="mb-3"><i class="bi bi-card-text me-2"></i>Описание события</h5>
+                    <p>@Model.Description</p>
+                </div>
+
+                <!-- Переработанная структура кнопок -->
+                <div class="registration-actions animate-on-scroll delay-3">
+                    <div class="action-buttons">
+                        <a asp-action="Index" class="btn btn-back">
+                            <i class="bi bi-arrow-left me-2"></i>Назад к афише
+                        </a>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-back">
+                                <i class="bi bi-pencil me-2"></i>Редактировать
+                            </a>
+                        }
+                    </div>
+
+                    <div>
+                        @if (isRegistered)
+                        {
+                            <div class="registration-status">
+                                <div>
+                                    <i class="bi bi-check-circle-fill me-2"></i>
+                                    <strong>Вы зарегистрированы на это мероприятие!</strong>
+                                    @if (ViewBag.RegistrationId != null)
+                                    {
+                                        <div class="mt-2">
+                                            <small>Регистрационный номер: #@ViewBag.RegistrationId</small>
+                                        </div>
+                                    }
+                                </div>
+                                <a asp-controller="Registrations" asp-action="Index" class="btn btn-back">
+                                    <i class="bi bi-person-lines-fill me-2"></i> Мои регистрации
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a asp-controller="Registrations" asp-action="Register"
+                                   asp-route-eventId="@Model.Id" class="btn btn-register">
+                                    <i class="bi bi-ticket me-2"></i> Зарегистрироваться
+                                </a>
+                            }
+                            else
+                            {
+                                <div class="alert-info">
+                                    <i class="bi bi-info-circle-fill me-3" style="font-size: 1.5rem;"></i>
+                                    <div>
+                                        Для регистрации на мероприятие
+                                        <a asp-area="Identity" asp-page="/Account/Login" class="alert-link">войдите</a> в систему.
+                                        Если у вас еще нет аккаунта, вы можете
+                                        <a asp-area="Identity" asp-page="/Account/Register" class="alert-link">зарегистрироваться</a>.
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Анимация появления элементов при скролле
+    document.addEventListener('DOMContentLoaded', function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>
